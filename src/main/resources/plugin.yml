@@ -1,0 +1,32 @@
+author: ZephireNZ
+database: false
+main: ${project.groupId}.${project.artifactId}.${project.name}
+name: ${project.name}
+startup: postworld
+version: ${project.version}
+depend: [Vault, ZephCore]
+commands:
+  bank:
+    description: See, deposit and withdraw your money.
+    aliases: [money]
+  bankadmin:
+    description: Admin command for BankOfNoir.
+    aliases: [moneyadmin]
+    usage: |
+      /<command> reload - Reload the plugin
+      /<command> see [player] - Shows player's Bank
+      /<command> adjust [player] [amount] - Give/Take specified amount of money
+  pay:
+    description: Pay another player money.
+
+permissions:
+  bankofnoir.bank:
+    default: true
+  bankofnoir.pay:
+    default: true
+  bankofnoir.admin.reload:
+    default: op
+  bankofnoir.admin.see:
+    default: op
+  bankofnoir.admin.adjust:
+    default: op
