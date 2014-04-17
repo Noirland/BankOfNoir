@@ -1,0 +1,22 @@
+currency:
+  singular: Gold
+  plural: Gold
+  decimals: 2
+  denominations:
+    GOLD_NUGGET:
+      value: 10
+      round:
+        to: GOLD_INGOT
+        num: 9
+    GOLD_INGOT:
+      value: 100
+    GOLD_BLOCK:
+      value: 900
+mysql:
+  database: bankofnoir
+  port: 3306
+  host: localhost
+  username: herpa
+  password: derp
+  prefix: bank_
+debug: false
