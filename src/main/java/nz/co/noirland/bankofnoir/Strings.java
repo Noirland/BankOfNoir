@@ -16,6 +16,8 @@ public class Strings {
     public static final String PAY_SELF = "You can't pay yourself!";
     public static final String PAY_INSUFFICIENT_BALANCE = "You don't have enough money, you need %s";
     public static final String PAY_SUCCESSFUL = "Sent %s to %s.";
+    public static final String PAY_NEGATIVE_AMOUNT = "You cannot 'pay' a player a negative amount!";
+    public static final String PAY_ZERO_AMOUNT = "You cannot 'pay' a player a zero amount!";
 
     public static final String BANK_NO_CONSOLE = "Consoles cannot use /bank.";
     public static final String BANK_NO_ACCESS = "You do not own this Vault.";

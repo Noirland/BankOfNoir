@@ -20,6 +20,7 @@ public class BankOfNoir extends JavaPlugin {
         TODO: TESTING
         - Make sure all things work after UUID switchover
         - Updating inventory balance while it's open - exploits etc
+        - Paying negative/zero amounts
      */
 
     public static final String SIGN_TITLE = "[bank]";

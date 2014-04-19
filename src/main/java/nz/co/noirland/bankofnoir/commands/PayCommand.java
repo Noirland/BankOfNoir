@@ -58,7 +58,13 @@ public class PayCommand implements CommandExecutor {
             BankOfNoir.sendMessage(from, Strings.AMOUNT_NAN);
             return true;
         }
-        //TODO: Check if amount is negative
+        if(amount > 0) {
+            BankOfNoir.sendMessage(from, String.format(Strings.PAY_NEGATIVE_AMOUNT));
+            return true;
+        }
+        if(amount == 0) {
+            BankOfNoir.sendMessage(from, String.format(Strings.PAY_ZERO_AMOUNT));
+        }
 
         Double fromBal = eco.getBalance(from.getUniqueId());
         Double toBal   = eco.getBalance(to.getUniqueId());
