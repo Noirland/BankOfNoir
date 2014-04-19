@@ -113,7 +113,6 @@ public class PlayerListener implements Listener {
             bSign.breakNaturally();
             return;
         }
-        //TODO: StackOverflow
         if(BankUtil.checkForBankSign(bAttached, bSign) != null) {
             BankOfNoir.sendMessage(player, Strings.BANK_ALREADY_OWNED);
             event.setCancelled(true);
