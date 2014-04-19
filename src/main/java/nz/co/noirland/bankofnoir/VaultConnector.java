@@ -79,9 +79,9 @@ public class VaultConnector implements Economy {
         EconomyResponse response;
 
         if(hasAmount) {
-            eco.setBalance(Util.uuid(player), amount);
+            eco.setBalance(Util.uuid(player), balance - amount);
             balance = eco.getBalance(Util.uuid(player));
-            response = new EconomyResponse(amount, balance, EconomyResponse.ResponseType.SUCCESS, null);
+            response = new EconomyResponse(amount, eco.getBalance(Util.uuid(player)), EconomyResponse.ResponseType.SUCCESS, null);
         }else{
             response = new EconomyResponse(0, balance, EconomyResponse.ResponseType.FAILURE, Strings.VAULT_INSUFFICIENT_FUNDS);
         }
@@ -91,7 +91,7 @@ public class VaultConnector implements Economy {
     @Override
     public EconomyResponse depositPlayer(String player, double amount) {
         eco.setBalance(Util.uuid(player), eco.getBalance(Util.uuid(player)) + amount);
-        return new EconomyResponse(amount, eco.getBalance(nz.co.noirland.zephcore.Util.uuid(player)), EconomyResponse.ResponseType.SUCCESS, null);
+        return new EconomyResponse(amount, eco.getBalance(Util.uuid(player)), EconomyResponse.ResponseType.SUCCESS, null);
     }
 
     @Override
