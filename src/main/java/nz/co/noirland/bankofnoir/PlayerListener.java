@@ -12,6 +12,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -166,12 +167,18 @@ public class PlayerListener implements Listener {
         }
     }
 
-    //TODO: Burning
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onBlockBurn(BlockBurnEvent event) {
+        Block block = event.getBlock();
+        if(BankUtil.isBankSign(block) || BankUtil.checkForBankSign(block, null) != null) {
+            event.setCancelled(true);
+        }
+    }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
-        org.bukkit.block.Sign sign;
+        Sign sign;
         Player player = event.getPlayer();
         if(BankUtil.isBankSign(block)) {
             sign = (org.bukkit.block.Sign) block.getState();
