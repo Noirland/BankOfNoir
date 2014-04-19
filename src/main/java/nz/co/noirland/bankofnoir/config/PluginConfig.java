@@ -41,11 +41,6 @@ public class PluginConfig extends Config {
         ConfigurationSection section = config.getConfigurationSection("currency.denominations");
         ArrayList<MoneyDenomination> denoms = new ArrayList<MoneyDenomination>();
         for(String key : section.getKeys(false)) {
-            if(section.get(key) instanceof ConfigurationSection) {
-                ConfigurationSection denomSect = section.getConfigurationSection(key);
-                denoms.add(new MoneyDenomination(Material.getMaterial(key), denomSect.getDouble("value"), Material.getMaterial(denomSect.getString("round.to")), denomSect.getInt("round.num")));
-                continue;
-            }
             denoms.add(new MoneyDenomination(Material.getMaterial(key), section.getDouble(key)));
         }
         return denoms;

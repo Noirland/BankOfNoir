@@ -3,15 +3,9 @@ currency:
   plural: Gold
   decimals: 2
   denominations:
-    GOLD_NUGGET:
-      value: 10
-      round:
-        to: GOLD_INGOT
-        num: 9
-    GOLD_INGOT:
-      value: 100
-    GOLD_BLOCK:
-      value: 900
+    GOLD_NUGGET: 10
+    GOLD_INGOT: 90
+    GOLD_BLOCK: 810
 mysql:
   database: bankofnoir
   port: 3306

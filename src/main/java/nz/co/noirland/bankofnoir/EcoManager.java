@@ -106,20 +106,7 @@ public class EcoManager {
             MoneyDenomination denom = getDenomination(item.getType());
             amounts.put(denom, (amounts.containsKey(denom) ? amounts.get(denom) : 0) + item.getAmount());
         }
-        //TODO: REMOVE rounding
-        for (Map.Entry<MoneyDenomination, Integer> entry : amounts.entrySet()) {
-            MoneyDenomination denom = entry.getKey();
-            if (denom.getRoundMat() == null) continue;
-            if (!isDenomination(denom.getRoundMat())) {
-                BankOfNoir.debug().warning(denom.getMaterial().name() + " round material " + denom.getRoundMat().name() + " is not a denomination!");
-                continue;
-            }
-            MoneyDenomination roundDenom = getDenomination(denom.getRoundMat());
-            int denomLeft = amounts.get(denom) % denom.getRoundNum();
-            int roundAmount = amounts.get(denom) / denom.getRoundNum();
-            entry.setValue(denomLeft);
-            amounts.put(roundDenom, (amounts.containsKey(roundDenom) ? amounts.get(roundDenom) : 0) + roundAmount);
-        }
+
         for(Map.Entry<MoneyDenomination, Integer> entry : amounts.entrySet()) {
             balance += entry.getKey().getValue() * entry.getValue();
         }
