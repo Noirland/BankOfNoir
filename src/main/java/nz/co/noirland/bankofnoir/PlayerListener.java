@@ -17,6 +17,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -121,6 +122,27 @@ public class PlayerListener implements Listener {
         }
 
         //TODO: Move items in chest to virtual
+
+        Inventory inv = ((InventoryHolder) bAttached.getState()).getInventory();
+        ItemStack[] contents = inv.getContents();
+        Double val = 0D;
+        for(int i = 0;i<inv.getSize(); i++) {
+            ItemStack item = contents[i];
+            if(item == null) continue;
+            inv.setItem(i, null);
+            if(eco.isDenomination(item.getType())) {
+                val += eco.getDenomination(item.getType()).getValue() * item.getAmount();
+                continue;
+            }
+
+            HashMap<Integer, ItemStack> leftovers = player.getInventory().addItem(item);
+            for(ItemStack left : leftovers.values()) {
+                player.getWorld().dropItem(player.getLocation(), left);
+            }
+        }
+        if(val > 0) {
+            eco.setBalance(player.getUniqueId(), eco.getBalance(player.getUniqueId()) + val);
+        }
 
         String pName = player.getName();
 
