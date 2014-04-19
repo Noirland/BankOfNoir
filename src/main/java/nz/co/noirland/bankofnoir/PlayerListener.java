@@ -121,8 +121,6 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        //TODO: Move items in chest to virtual
-
         Inventory inv = ((InventoryHolder) bAttached.getState()).getInventory();
         ItemStack[] contents = inv.getContents();
         Double val = 0D;

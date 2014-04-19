@@ -21,6 +21,7 @@ public class BankOfNoir extends JavaPlugin {
         - Make sure all things work after UUID switchover
         - Updating inventory balance while it's open - exploits etc
         - Paying negative/zero amounts
+        - Moving items out of a bank chest when creating it
      */
 
     public static final String SIGN_TITLE = "[bank]";
