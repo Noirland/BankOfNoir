@@ -22,6 +22,7 @@ public class BankOfNoir extends JavaPlugin {
         - Updating inventory balance while it's open - exploits etc
         - Paying negative/zero amounts
         - Moving items out of a bank chest when creating it
+        - Bankadmin reload
      */
 
     public static final String SIGN_TITLE = "[bank]";

@@ -24,7 +24,17 @@ public class EcoManager {
 
     EcoManager(Collection<MoneyDenomination> denoms) {
         denominations.addAll(denoms);
+        reloadBalances();
+    }
+
+    public void setDenominations(Collection<MoneyDenomination> denoms) {
+        denominations.clear();
+        denominations.addAll(denoms);
+    }
+
+    public void reloadBalances() {
         Map<UUID, Double> db_balances = db.getAllBalances();
+        balances.clear();
         balances.putAll(db_balances);
     }
 

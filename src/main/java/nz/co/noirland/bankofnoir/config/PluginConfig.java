@@ -23,6 +23,10 @@ public class PluginConfig extends Config {
         return inst;
     }
 
+    public void reload() {
+        loadFile();
+    }
+
     // MySQL
     public String getPrefix()    { return config.getString("mysql.prefix", "bank_"); }
     public String getDatabase()  { return config.getString("mysql.database", "bankofnoir"); }

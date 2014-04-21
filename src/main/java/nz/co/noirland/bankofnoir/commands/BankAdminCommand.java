@@ -4,6 +4,8 @@ import nz.co.noirland.bankofnoir.BankOfNoir;
 import nz.co.noirland.bankofnoir.EcoManager;
 import nz.co.noirland.bankofnoir.Permissions;
 import nz.co.noirland.bankofnoir.Strings;
+import nz.co.noirland.bankofnoir.config.PluginConfig;
+import nz.co.noirland.bankofnoir.database.SQLDatabase;
 import nz.co.noirland.zephcore.Util;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -58,14 +60,16 @@ public class BankAdminCommand implements CommandExecutor {
     }
 
     private void reloadCommand(CommandSender sender) {
-        /*
-          Things to reload:
-          - Config file
-            - Reset MoneyDenominations
-          - Database Connection
-          - Balance cache
-         */
-        //TODO: Reload command
+        if(!sender.hasPermission(Permissions.RELOAD)) {
+            sender.sendMessage(Strings.NO_PERMISSION);
+            return;
+        }
+
+        PluginConfig.inst().reload();
+        eco.setDenominations(PluginConfig.inst().getDenoms());
+        SQLDatabase.inst().openConnection();
+        eco.reloadBalances();
+        BankOfNoir.sendMessage(sender, Strings.BANKADMIN_RELOADED);
     }
 
     private void seeCommand(CommandSender sender, String target) {

@@ -22,13 +22,7 @@ public class SQLDatabase {
     }
 
     private SQLDatabase() {
-        PluginConfig config = PluginConfig.inst();
-        String url = "jdbc:mysql://" + config.getHost() + ":" + config.getPort() + "/" + config.getDatabase();
-        try {
-            con = DriverManager.getConnection(url, config.getUsername(), config.getPassword());
-        } catch (SQLException e) {
-            BankOfNoir.debug().disable("Couldn't connect to database!", e);
-        }
+        openConnection();
         new AsyncDatabaseUpdateTask().runTaskTimerAsynchronously(BankOfNoir.inst(), 0, 2);
     }
 
@@ -125,6 +119,21 @@ public class SQLDatabase {
 
     public void runStatementAsync(PreparedStatement statement) {
         AsyncDatabaseUpdateTask.updates.add(statement);
+    }
+
+    public void openConnection() {
+        try {
+            if(con != null && !con.isClosed()) {
+                con.close();
+            }
+        } catch (SQLException ignored) {}
+        PluginConfig config = PluginConfig.inst();
+        String url = "jdbc:mysql://" + config.getHost() + ":" + config.getPort() + "/" + config.getDatabase();
+        try {
+            con = DriverManager.getConnection(url, config.getUsername(), config.getPassword());
+        } catch (SQLException e) {
+            BankOfNoir.debug().disable("Couldn't connect to database!", e);
+        }
     }
     // -- UTILITY FUNCTIONS -- //
 

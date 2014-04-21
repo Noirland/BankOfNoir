@@ -24,6 +24,7 @@ public class Strings {
     public static final String BANK_ALREADY_OWNED = "That chest is already a Bank.";
 
     public static final String BANKADMIN_BAL_UPDATED = "Updated balance of %s by %s";
+    public static final String BANKADMIN_RELOADED = "Plugin successfully reloaded";
 
     public static final String ECO_DEPOSITED = "Deposited %s";
     public static final String ECO_WITHDREW = "Withdrew %s";
