@@ -25,6 +25,7 @@ public class Strings {
 
     public static final String BANKADMIN_BAL_UPDATED = "Updated balance of %s by %s";
     public static final String BANKADMIN_RELOADED = "Plugin successfully reloaded";
+    public static final String BANKADMIN_NEGATIVE = "Player's new balance cannot be negative!";
 
     public static final String ECO_DEPOSITED = "Deposited %s";
     public static final String ECO_WITHDREW = "Withdrew %s";

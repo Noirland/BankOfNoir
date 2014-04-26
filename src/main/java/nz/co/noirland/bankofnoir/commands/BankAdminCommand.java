@@ -13,6 +13,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 public class BankAdminCommand implements CommandExecutor {
@@ -114,6 +115,8 @@ public class BankAdminCommand implements CommandExecutor {
         }
 
         Double toBal = eco.getBalance(to.getUniqueId());
+
+        amount = Util.round(amount, new DecimalFormat("#.##"));
 
         if(amount == 0) return;
 
