@@ -20,7 +20,7 @@ public class Strings {
     public static final String PAY_ZERO_AMOUNT = "You cannot 'pay' a player a zero amount!";
 
     public static final String BANK_NO_CONSOLE = "Consoles cannot use /bank.";
-    public static final String BANK_NO_ACCESS = "You do not own this Vault.";
+    public static final String BANK_NO_ACCESS = "You do not own this Bank.";
     public static final String BANK_ALREADY_OWNED = "That chest is already a Bank.";
 
     public static final String BANKADMIN_BAL_UPDATED = "Updated balance of %s by %s";
