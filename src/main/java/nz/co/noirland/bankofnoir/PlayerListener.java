@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,6 +21,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -70,16 +73,16 @@ public class PlayerListener implements Listener {
         double balance = eco.getBalance(owner);
         double newBalance = eco.itemsToBalance(inv.getContents()) + bank.getRemainder();
 
-        ItemStack[] contents = inv.getContents();
-        for(int i = 0;i<inv.getSize(); i++) {
-            ItemStack item = contents[i];
+        for(ItemStack item : inv.getContents()) {
             if(item == null) continue;
             if(eco.isDenomination(item.getType())) continue;
 
-            inv.setItem(i, item);
-            HashMap<Integer, ItemStack> leftovers = player.getInventory().addItem(item);
-            for(ItemStack left : leftovers.values()) {
-                player.getWorld().dropItem(player.getLocation(), left);
+            PlayerInventory pInv = player.getInventory();
+            if(pInv.firstEmpty() != -1) {
+                pInv.addItem(item);
+                new UpdateInventoryTask(player);
+            }else{
+                player.getWorld().dropItem(player.getLocation(), item);
             }
         }
 
@@ -110,7 +113,7 @@ public class PlayerListener implements Listener {
 
         org.bukkit.material.Sign s = (org.bukkit.material.Sign) bSign.getState().getData();
         Block bAttached = bSign.getRelative(s.getAttachedFace());
-        if(bAttached.getType() != Material.CHEST) {
+        if(bAttached.getType() != Material.CHEST || s.getAttachedFace() == BlockFace.DOWN) {
             event.setCancelled(true);
             bSign.breakNaturally();
             return;
@@ -125,7 +128,7 @@ public class PlayerListener implements Listener {
         Inventory inv = ((InventoryHolder) bAttached.getState()).getInventory();
         ItemStack[] contents = inv.getContents();
         Double val = 0D;
-        for(int i = 0;i<inv.getSize(); i++) {
+        for(int i = 0; i<inv.getSize(); i++) {
             ItemStack item = contents[i];
             if(item == null) continue;
             inv.setItem(i, null);
@@ -138,15 +141,18 @@ public class PlayerListener implements Listener {
             for(ItemStack left : leftovers.values()) {
                 player.getWorld().dropItem(player.getLocation(), left);
             }
+            new UpdateInventoryTask(player);
         }
         if(val > 0) {
             eco.setBalance(player.getUniqueId(), eco.getBalance(player.getUniqueId()) + val);
+            BankOfNoir.sendMessage(player, String.format(Strings.ECO_DEPOSITED, eco.format(val)));
         }
 
         String pName = player.getName();
 
          String[] lines = event.getLines();
         lines[0] = ChatColor.BOLD + lines[0];
+        lines[1] = "";
         lines[2] = pName.substring(0, Math.min(pName.length(), 15));
         lines[3] = "";
         if(pName.length() > 15) {
@@ -193,6 +199,19 @@ public class PlayerListener implements Listener {
         if(!player.getName().equals(owner) && !player.hasPermission(Permissions.SEE)) {
             BankOfNoir.sendMessage(player, Strings.BANK_NO_ACCESS);
             event.setCancelled(true);
+        }
+    }
+
+    private class UpdateInventoryTask extends BukkitRunnable {
+        private Player player;
+        UpdateInventoryTask(Player player) {
+            this.player = player;
+            runTaskLater(BankOfNoir.inst(), 0);
+        }
+
+        @Override
+        public void run() {
+            player.updateInventory();
         }
     }
 }
