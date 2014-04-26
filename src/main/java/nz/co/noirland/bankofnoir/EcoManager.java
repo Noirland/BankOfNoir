@@ -94,13 +94,11 @@ public class EcoManager {
         for(MoneyDenomination denom : denoms) {
             int amount = (int) (balance / denom.getValue());
             balance = balance % denom.getValue();
-            while(amount > 0) {
-                int num = 64;
-                if(amount < 64) {
-                    num = amount;
-                }
-                items.add(new ItemStack(denom.getMaterial(), num));
-                amount -= num;
+            for(int i = 0; i < (amount / 64); i++) {
+                items.add(new ItemStack(denom.getMaterial(), 64));
+            }
+            if(amount > 0) {
+                items.add(new ItemStack(denom.getMaterial(), amount % 64));
             }
         }
         return items.toArray(new ItemStack[items.size()]);
