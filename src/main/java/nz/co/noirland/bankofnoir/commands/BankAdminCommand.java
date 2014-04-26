@@ -117,6 +117,11 @@ public class BankAdminCommand implements CommandExecutor {
 
         if(amount == 0) return;
 
+        if(toBal + amount < 0) {
+            BankOfNoir.sendMessage(sender, Strings.BANKADMIN_NEGATIVE);
+            return;
+        }
+
         eco.setBalance(to.getUniqueId(), toBal + amount);
         String format;
         if(to.getPlayer() != null) {
