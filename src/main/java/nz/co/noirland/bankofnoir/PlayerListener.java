@@ -186,13 +186,11 @@ public class PlayerListener implements Listener {
         Block block = event.getBlock();
         Sign sign;
         Player player = event.getPlayer();
-        if(BankUtil.isBankSign(block)) {
+        if (BankUtil.isBankSign(block)) {
             sign = (org.bukkit.block.Sign) block.getState();
-        }
-        else if(BankUtil.checkForBankSign(block, null) != null) {
-            sign = BankUtil.checkForBankSign(block, null);
         }else{
-            return;
+            sign = BankUtil.checkForBankSign(block, null);
+            if(sign == null) return;
         }
 
         String owner = sign.getLine(2) + sign.getLine(3);
