@@ -10,6 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 public class PayCommand implements CommandExecutor {
@@ -58,13 +59,15 @@ public class PayCommand implements CommandExecutor {
             BankOfNoir.sendMessage(from, Strings.AMOUNT_NAN);
             return true;
         }
-        if(amount > 0) {
+        if(amount < 0) {
             BankOfNoir.sendMessage(from, String.format(Strings.PAY_NEGATIVE_AMOUNT));
             return true;
         }
         if(amount == 0) {
             BankOfNoir.sendMessage(from, String.format(Strings.PAY_ZERO_AMOUNT));
+            return true;
         }
+        amount = Util.round(amount, new DecimalFormat("#.##"));
 
         Double fromBal = eco.getBalance(from.getUniqueId());
         Double toBal   = eco.getBalance(to.getUniqueId());

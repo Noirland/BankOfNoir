@@ -46,7 +46,7 @@
         <dependency>
             <groupId>nz.co.noirland</groupId>
             <artifactId>zephcore</artifactId>
-            <version>1.4</version>
+            <version>1.5</version>
         </dependency>
     </dependencies>
 
@@ -84,7 +84,6 @@
                             <artifactSet>
                                 <includes>
                                     <include>org.apache.commons:commons-collections4</include>
-                                    <include>nz.co.noirland:zephcore</include>
                                 </includes>
                             </artifactSet>
                             <relocations>
