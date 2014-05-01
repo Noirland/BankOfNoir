@@ -97,7 +97,7 @@ public class EcoManager {
             for(int i = 0; i < (amount / 64); i++) {
                 items.add(new ItemStack(denom.getMaterial(), 64));
             }
-            if(amount > 0) {
+            if(amount > 0 && amount % 64 != 0) {
                 items.add(new ItemStack(denom.getMaterial(), amount % 64));
             }
         }
