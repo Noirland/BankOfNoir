@@ -3,6 +3,7 @@ package nz.co.noirland.bankofnoir.database;
 import nz.co.noirland.bankofnoir.BankOfNoir;
 import nz.co.noirland.bankofnoir.config.PluginConfig;
 import nz.co.noirland.bankofnoir.database.schema.Schema;
+import nz.co.noirland.zephcore.database.AsyncDatabaseUpdateTask;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -23,7 +24,6 @@ public class SQLDatabase {
 
     private SQLDatabase() {
         openConnection();
-        new AsyncDatabaseUpdateTask().runTaskTimerAsynchronously(BankOfNoir.inst(), 0, 2);
     }
 
     // -- QUERY FUNCTIONS -- //
