@@ -16,15 +16,6 @@ public class BankOfNoir extends JavaPlugin {
     private static EcoManager eco;
     private static Debug debug;
 
-    /*
-        TODO: TESTING
-        - Make sure all things work after UUID switchover
-        - Updating inventory balance while it's open - exploits etc
-        - Paying negative/zero amounts
-        - Moving items out of a bank chest when creating it
-        - Bankadmin reload
-     */
-
     public static final String SIGN_TITLE = "[bank]";
 
     public static BankOfNoir inst() {
@@ -42,7 +33,7 @@ public class BankOfNoir extends JavaPlugin {
     public void onEnable() {
         inst = this;
         PluginConfig config = PluginConfig.inst();
-        debug = new Debug(this, config.getDebug());
+        debug = new Debug(this);
 
         SQLDatabase.inst().checkSchema();
 
