@@ -34,6 +34,13 @@ public class EcoManager {
 
     public void reloadBalances() {
         Map<UUID, Double> db_balances = db.getAllBalances();
+        for(UUID player : db_balances.keySet()) {
+            if(!openBanks.containsKey(player)) continue;
+            Double diff = db_balances.get(player) - getBalance(player);
+            BankInventory bank = openBanks.get(player);
+            Double bankBalance = itemsToBalance(bank.getBank().getContents()) + bank.getRemainder();
+            bank.setRemainder(setBankContents(bank.getBank(), bankBalance + diff));
+        }
         balances.clear();
         balances.putAll(db_balances);
     }
