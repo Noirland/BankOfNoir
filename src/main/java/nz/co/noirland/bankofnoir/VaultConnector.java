@@ -1,6 +1,5 @@
 package nz.co.noirland.bankofnoir;
 
-import net.milkbowl.vault.economy.AbstractEconomy;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import nz.co.noirland.bankofnoir.config.PluginConfig;
