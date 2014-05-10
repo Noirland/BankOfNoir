@@ -6,7 +6,7 @@
 
     <groupId>nz.co.noirland</groupId>
     <artifactId>bankofnoir</artifactId>
-    <version>1.0.1</version>
+    <version>1.1</version>
     <name>BankOfNoir</name>
 
 
@@ -30,9 +30,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>net.milkbowl</groupId>
-            <artifactId>vault</artifactId>
-            <version>1.2.27</version>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>Vault</artifactId>
+            <version>LATEST</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
