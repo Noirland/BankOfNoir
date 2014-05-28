@@ -79,6 +79,10 @@ public class PayCommand implements CommandExecutor {
         eco.setBalance(to.getUniqueId(), toBal + amount);
         eco.setBalance(from.getUniqueId(), fromBal - amount);
 
+        if(to.getPlayer() != null) {
+            BankOfNoir.sendMessage(to.getPlayer(), String.format(Strings.PAY_RECIEVED, eco.format(amount), from.getName()));
+        }
+
         BankOfNoir.sendMessage(from, String.format(Strings.PAY_SUCCESSFUL, eco.format(amount), to.getName()));
         return true;
     }
