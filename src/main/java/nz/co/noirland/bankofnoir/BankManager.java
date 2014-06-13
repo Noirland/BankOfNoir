@@ -8,8 +8,6 @@ import java.util.UUID;
 
 public class BankManager extends AbstractBankManager<UUID> {
 
-    private EcoManager eco;
-
     public BankManager() {
         eco = BankOfNoir.getEco();
     }
