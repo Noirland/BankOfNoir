@@ -171,7 +171,7 @@ public class EcoManager {
     /**
      * @return Remainder + overflow after inventory is loaded
      */
-    private Double setBankContents(Inventory bank, Double balance) {
+    public Double setBankContents(Inventory bank, Double balance) {
         bank.clear();
 
         HashMap<Integer, ItemStack> leftover = bank.addItem(balanceToItems(balance));
