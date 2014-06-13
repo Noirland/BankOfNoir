@@ -17,7 +17,7 @@ import java.util.*;
 
 public abstract class AbstractBankManager<T> implements Listener {
 
-    protected EcoManager eco = BankOfNoir.getEco();
+    protected EcoManager eco = EcoManager.inst();
 
     protected final Map<T, BankInventory<T>> openBanks = new HashMap<T, BankInventory<T>>();
 

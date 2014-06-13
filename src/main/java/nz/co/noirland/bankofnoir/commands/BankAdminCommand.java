@@ -21,7 +21,7 @@ public class BankAdminCommand implements CommandExecutor {
       /bankadmin adjust [player] [amount] # Adjusts specified player's balance by a negative or positive amount
      */
 
-    private final EcoManager eco = BankOfNoir.getEco();
+    private final EcoManager eco = EcoManager.inst();
     private final BankManager bankManager = eco.getBankManager();
 
     @Override

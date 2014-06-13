@@ -14,7 +14,7 @@ import java.util.List;
 public class VaultConnector implements Economy {
 
     private final String name = "BankOfNoir";
-    private final EcoManager eco = BankOfNoir.getEco();
+    private final EcoManager eco = EcoManager.inst();
     private final PluginConfig config = PluginConfig.inst();
 
     public VaultConnector() {

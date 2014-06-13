@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class PayCommand implements CommandExecutor {
 
-    private final EcoManager eco = BankOfNoir.getEco();
+    private final EcoManager eco = EcoManager.inst();
 
     /*
       /pay [player] [amount]

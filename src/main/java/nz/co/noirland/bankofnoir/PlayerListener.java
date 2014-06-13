@@ -27,7 +27,7 @@ import java.util.List;
 
 public class PlayerListener implements Listener {
 
-    private final EcoManager eco = BankOfNoir.getEco();
+    private final EcoManager eco = EcoManager.inst();
     private final BankManager bankManager = eco.getBankManager();
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)

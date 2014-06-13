@@ -16,10 +16,18 @@ public class EcoManager {
     private final String format = "%." + config.getDecimals() + "f %s";
     private final SQLDatabase db = SQLDatabase.inst();
 
+    private static EcoManager inst;
     private BankManager bankManager;
 
-    EcoManager(Collection<MoneyDenomination> denoms) {
-        bankManager = new BankManager();
+    public static EcoManager inst() {
+        if(inst == null) {
+            inst = new EcoManager(PluginConfig.inst().getDenoms());
+            inst.bankManager = new BankManager();
+        }
+        return inst;
+    }
+
+    private EcoManager(Collection<MoneyDenomination> denoms) {
         denominations.addAll(denoms);
         reloadBalances();
     }

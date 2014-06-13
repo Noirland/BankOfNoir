@@ -1,6 +1,6 @@
 package nz.co.noirland.bankofnoir.commands;
 
-import nz.co.noirland.bankofnoir.BankOfNoir;
+import nz.co.noirland.bankofnoir.EcoManager;
 import nz.co.noirland.bankofnoir.Permissions;
 import nz.co.noirland.bankofnoir.Strings;
 import org.bukkit.command.Command;
@@ -22,7 +22,7 @@ public class BankCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        player.openInventory(BankOfNoir.getEco().getBankManager().getBank(player.getUniqueId()).getBank());
+        player.openInventory(EcoManager.inst().getBankManager().getBank(player.getUniqueId()).getBank());
         return true;
     }
 }
