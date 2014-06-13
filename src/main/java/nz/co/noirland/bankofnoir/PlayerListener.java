@@ -4,7 +4,6 @@ import nz.co.noirland.zephcore.UpdateInventoryTask;
 import nz.co.noirland.zephcore.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -17,22 +16,19 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 public class PlayerListener implements Listener {
 
     private final EcoManager eco = BankOfNoir.getEco();
-
+    private final BankManager bankManager = eco.getBankManager();
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onOpenChest(PlayerInteractEvent event) {
@@ -55,53 +51,7 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        player.openInventory(eco.getBank(nz.co.noirland.zephcore.Util.uuid(owner)).getBank());
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onCloseChest(InventoryCloseEvent event) {
-        Inventory inv = event.getInventory();
-        Player player = (Player) event.getPlayer();
-
-        BankInventory<UUID> bank = eco.getOpenBank(inv);
-        if(bank == null) {
-            return;
-        }
-        UUID owner = bank.getOwner();
-        eco.removeOpenBank(bank);
-
-        double balance = eco.getBalance(owner);
-        double newBalance = eco.itemsToBalance(inv.getContents()) + bank.getRemainder();
-
-        for(ItemStack item : inv.getContents()) {
-            if(item == null) continue;
-            if(eco.isDenomination(item.getType())) continue;
-
-            PlayerInventory pInv = player.getInventory();
-            if(pInv.firstEmpty() != -1) {
-                pInv.addItem(item);
-                new UpdateInventoryTask(player);
-            }else{
-                player.getWorld().dropItem(player.getLocation(), item);
-            }
-        }
-
-        if(newBalance != balance) {
-            eco.setBalance(owner, newBalance);
-            String action;
-
-            if(newBalance > balance) {
-                action = Strings.ECO_DEPOSITED;
-            }else {
-                action = Strings.ECO_WITHDREW;
-            }
-            BankOfNoir.sendMessage(player, String.format(action, eco.format(Math.abs(newBalance - balance))));
-
-            OfflinePlayer pOwner = Util.player(owner);
-            if(!pOwner.equals(player) && pOwner.hasPlayedBefore() && pOwner.isOnline()) {
-                BankOfNoir.sendMessage(pOwner.getPlayer(), String.format(action, eco.format(Math.abs(newBalance - balance))));
-            }
-        }
+        player.openInventory(bankManager.getBank(Util.uuid(owner)).getBank());
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)

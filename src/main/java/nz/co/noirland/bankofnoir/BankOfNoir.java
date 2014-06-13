@@ -41,6 +41,7 @@ public class BankOfNoir extends JavaPlugin {
         new VaultConnector();
 
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(eco.getBankManager(), this);
         getCommand("bank").setExecutor(new BankCommand());
         getCommand("bankadmin").setExecutor(new BankAdminCommand());
         getCommand("pay").setExecutor(new PayCommand());

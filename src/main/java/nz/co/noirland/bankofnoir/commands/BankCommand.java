@@ -22,7 +22,7 @@ public class BankCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        player.openInventory(BankOfNoir.getEco().getBank(player.getUniqueId()).getBank());
+        player.openInventory(BankOfNoir.getEco().getBankManager().getBank(player.getUniqueId()).getBank());
         return true;
     }
 }

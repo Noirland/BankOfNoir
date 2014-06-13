@@ -1,9 +1,6 @@
 package nz.co.noirland.bankofnoir.commands;
 
-import nz.co.noirland.bankofnoir.BankOfNoir;
-import nz.co.noirland.bankofnoir.EcoManager;
-import nz.co.noirland.bankofnoir.Permissions;
-import nz.co.noirland.bankofnoir.Strings;
+import nz.co.noirland.bankofnoir.*;
 import nz.co.noirland.bankofnoir.config.PluginConfig;
 import nz.co.noirland.bankofnoir.database.SQLDatabase;
 import nz.co.noirland.zephcore.Util;
@@ -25,6 +22,7 @@ public class BankAdminCommand implements CommandExecutor {
      */
 
     private final EcoManager eco = BankOfNoir.getEco();
+    private final BankManager bankManager = eco.getBankManager();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
@@ -90,7 +88,7 @@ public class BankAdminCommand implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-        player.openInventory(BankOfNoir.getEco().getBank(tar.getUniqueId()).getBank());
+        player.openInventory(bankManager.getBank(tar.getUniqueId()).getBank());
     }
 
     private void adjustCommand(CommandSender sender, String toStr, String amountStr) {
