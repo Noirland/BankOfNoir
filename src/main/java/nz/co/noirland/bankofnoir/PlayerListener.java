@@ -63,7 +63,7 @@ public class PlayerListener implements Listener {
         Inventory inv = event.getInventory();
         Player player = (Player) event.getPlayer();
 
-        BankInventory bank = eco.getOpenBank(inv);
+        BankInventory<UUID> bank = eco.getOpenBank(inv);
         if(bank == null) {
             return;
         }
