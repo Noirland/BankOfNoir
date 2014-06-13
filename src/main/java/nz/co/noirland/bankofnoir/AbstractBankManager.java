@@ -90,7 +90,7 @@ public abstract class AbstractBankManager<T> implements Listener {
         }
 
         if(newBalance != balance) {
-            updateBalance(owner, player, balance, newBalance - balance);
+            updateBalance(owner, player, newBalance, newBalance - balance);
         }
     }
 
