@@ -21,16 +21,15 @@ public class EcoManager {
 
     public static EcoManager inst() {
         if(inst == null) {
-            inst = new EcoManager(PluginConfig.inst().getDenoms());
+            inst = new EcoManager();
             inst.bankManager = new BankManager();
+            inst.denominations.addAll(PluginConfig.inst().getDenoms());
+            inst.reloadBalances();
         }
         return inst;
     }
 
-    private EcoManager(Collection<MoneyDenomination> denoms) {
-        denominations.addAll(denoms);
-        reloadBalances();
-    }
+    private EcoManager() {}
 
     public BankManager getBankManager() {
         return bankManager;
