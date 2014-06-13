@@ -20,7 +20,7 @@ public class EcoManager {
     private final PluginConfig config = PluginConfig.inst();
     private final String format = "%." + config.getDecimals() + "f %s";
     private final SQLDatabase db = SQLDatabase.inst();
-    private final Map<UUID, BankInventory> openBanks = new HashMap<UUID, BankInventory>();
+    private final Map<UUID, BankInventory<UUID>> openBanks = new HashMap<UUID, BankInventory<UUID>>();
 
     EcoManager(Collection<MoneyDenomination> denoms) {
         denominations.addAll(denoms);
@@ -37,7 +37,7 @@ public class EcoManager {
         for(UUID player : db_balances.keySet()) {
             if(!openBanks.containsKey(player)) continue;
             Double diff = db_balances.get(player) - getBalance(player);
-            BankInventory bank = openBanks.get(player);
+            BankInventory<UUID> bank = openBanks.get(player);
             Double bankBalance = itemsToBalance(bank.getBank().getContents()) + bank.getRemainder();
             bank.setRemainder(setBankContents(bank.getBank(), bankBalance + diff));
         }
@@ -63,7 +63,7 @@ public class EcoManager {
         balances.put(player, balance);
         db.setBalance(player, balance);
         if(!openBanks.containsKey(player)) return;
-        BankInventory bank = openBanks.get(player);
+        BankInventory<UUID> bank = openBanks.get(player);
         Double bankBalance = itemsToBalance(bank.getBank().getContents()) + bank.getRemainder();
         bank.setRemainder(setBankContents(bank.getBank(), bankBalance + diff));
 
@@ -128,8 +128,8 @@ public class EcoManager {
         return balance;
     }
 
-    public BankInventory getBank(UUID player) {
-        BankInventory bank;
+    public BankInventory<UUID> getBank(UUID player) {
+        BankInventory<UUID> bank;
         if(openBanks.containsKey(player)) {
             bank = openBanks.get(player);
         } else {
@@ -139,9 +139,9 @@ public class EcoManager {
         return bank;
     }
 
-    public BankInventory getOpenBank(Inventory inv) {
-        BankInventory bank = null;
-        for(Map.Entry<UUID, BankInventory> entry : openBanks.entrySet()) {
+    public BankInventory<UUID> getOpenBank(Inventory inv) {
+        BankInventory<UUID> bank = null;
+        for(Map.Entry<UUID, BankInventory<UUID>> entry : openBanks.entrySet()) {
             if(entry.getValue().getBank().equals(inv)) {
                 bank = entry.getValue();
                 break;
@@ -150,17 +150,17 @@ public class EcoManager {
         return bank;
     }
 
-    public void removeOpenBank(BankInventory bank) {
+    public void removeOpenBank(BankInventory<UUID> bank) {
         if(bank.getBank().getViewers().size() > 1) return;
         openBanks.remove(bank.getOwner());
     }
 
-    public BankInventory createBank(UUID player) {
+    public BankInventory<UUID> createBank(UUID player) {
         Inventory bank = BankOfNoir.inst().getServer().createInventory(null, BANK_SIZE, "Bank: " + ChatColor.GOLD + Util.player(player).getName());
 
         Double remainder = setBankContents(bank, getBalance(player));
 
-        return new BankInventory(player, bank, remainder);
+        return new BankInventory<UUID>(player, bank, remainder);
     }
 
     public Double getRemainder(Double balance) {

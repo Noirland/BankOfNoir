@@ -2,21 +2,19 @@ package nz.co.noirland.bankofnoir;
 
 import org.bukkit.inventory.Inventory;
 
-import java.util.UUID;
+public class BankInventory<T> {
 
-public class BankInventory {
-
-    private final UUID owner;
+    private final T owner;
     private final Inventory bank;
     private Double remainder;
 
-    public BankInventory(UUID owner, Inventory bank, Double remainder) {
+    public BankInventory(T owner, Inventory bank, Double remainder) {
         this.owner = owner;
         this.bank = bank;
         this.remainder = remainder;
     }
 
-    public UUID getOwner() {
+    public T getOwner() {
         return owner;
     }
 
