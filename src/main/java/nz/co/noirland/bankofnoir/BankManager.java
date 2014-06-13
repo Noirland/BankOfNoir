@@ -8,10 +8,6 @@ import java.util.UUID;
 
 public class BankManager extends AbstractBankManager<UUID> {
 
-    public BankManager() {
-        eco = BankOfNoir.getEco();
-    }
-
     @Override
     protected double getBalance(UUID owner) {
         return eco.getBalance(owner);
