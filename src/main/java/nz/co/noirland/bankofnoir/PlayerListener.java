@@ -25,11 +25,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Listener class for BankOfNoir.
+ */
 public class PlayerListener implements Listener {
 
     private final EcoManager eco = EcoManager.inst();
     private final BankManager bankManager = eco.getBankManager();
 
+    /**
+     * Called when a player tries to open a chest.
+     * It checks whether the player has permission to access the bank chest.
+     * If they have permission, it instead opens the Bank Inventory of the owner.
+     * if they don't, it denies them permission to access.
+     */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onOpenChest(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -54,6 +63,13 @@ public class PlayerListener implements Listener {
         player.openInventory(bankManager.getBank(Util.uuid(owner)).getBank());
     }
 
+    /**
+     * Called when a player tries to place a sign. This makes sure they aren't trying to claim a
+     * claimed chest. If they aren't, it sets them as the owner of the chest using the sign.
+     * It also removes all items that are not currency from the chest, returning it to the player and
+     * dropping them to the ground. The rest that are currency are converted to a balance and added to
+     * the player.
+     */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onSignPlace(SignChangeEvent event) {
         Block bSign = event.getBlock();
@@ -111,6 +127,9 @@ public class PlayerListener implements Listener {
 
     }
 
+    /**
+     * Prevents bank chests from being exploded.
+     */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockExplode(EntityExplodeEvent event) {
         List<Block> exploded = event.blockList();
@@ -123,6 +142,9 @@ public class PlayerListener implements Listener {
         }
     }
 
+    /**
+     * Prevents a bank chest from being burned.
+     */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockBurn(BlockBurnEvent event) {
         Block block = event.getBlock();
@@ -131,6 +153,9 @@ public class PlayerListener implements Listener {
         }
     }
 
+    /**
+     * Prevents players from destroying bank chests that aren't their own.
+     */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         Block block = event.getBlock();

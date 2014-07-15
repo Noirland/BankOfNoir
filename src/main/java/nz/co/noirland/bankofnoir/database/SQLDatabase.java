@@ -28,6 +28,11 @@ public class SQLDatabase {
 
     // -- QUERY FUNCTIONS -- //
 
+    /**
+     * Checks whether given table exists in database
+     * @param table table to check
+     * @return whether this table exists
+     */
     public boolean isTable(String table) {
         try {
             prepareStatement("SELECT * FROM " + table).execute();

@@ -10,6 +10,10 @@ import org.bukkit.entity.Player;
 
 public class BankCommand implements CommandExecutor {
 
+    /*
+      Opens the caller's Bank.
+     */
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
         if(!(sender instanceof Player)) {

@@ -18,7 +18,7 @@ public class PayCommand implements CommandExecutor {
     private final EcoManager eco = EcoManager.inst();
 
     /*
-      /pay [player] [amount]
+      /pay [player] [amount] - Pays another player the given amount.
     */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {

@@ -2,6 +2,9 @@ package nz.co.noirland.bankofnoir;
 
 import org.bukkit.ChatColor;
 
+/**
+ * A class for all of the Strings sent to players in a message. This avoids duplicating strings in code.
+ */
 public class Strings {
 
     public static final String AMOUNT_NAN = "Amount is not a number!";
