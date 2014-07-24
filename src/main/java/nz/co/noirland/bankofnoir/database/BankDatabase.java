@@ -31,7 +31,7 @@ public class BankDatabase extends MySQLDatabase {
     private BankDatabase() {
         inst = this;
         schemas.put(1, new Schema1());
-        schemas.put(1, new Schema2());
+        schemas.put(2, new Schema2());
     }
 
     @Override
