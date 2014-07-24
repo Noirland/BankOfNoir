@@ -5,6 +5,7 @@ import nz.co.noirland.bankofnoir.commands.BankCommand;
 import nz.co.noirland.bankofnoir.commands.PayCommand;
 import nz.co.noirland.bankofnoir.database.BankDatabase;
 import nz.co.noirland.zephcore.Debug;
+import nz.co.noirland.zephcore.database.AsyncDatabaseUpdateTask;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,6 +55,14 @@ public class BankOfNoir extends JavaPlugin {
         getCommand("bank").setExecutor(new BankCommand());
         getCommand("bankadmin").setExecutor(new BankAdminCommand());
         getCommand("pay").setExecutor(new PayCommand());
+    }
+
+    /**
+     * Flush any remaining DB queries, and then close the database.
+     */
+    public void onDisable() {
+        AsyncDatabaseUpdateTask.inst().stop(); // Finishes any remaining queries
+        BankDatabase.inst().close();
     }
 
     /**
