@@ -6,6 +6,7 @@ import nz.co.noirland.bankofnoir.database.queries.GetAllBalancesQuery;
 import nz.co.noirland.bankofnoir.database.queries.UpdateBalanceQuery;
 import nz.co.noirland.bankofnoir.database.schema.Schema1;
 import nz.co.noirland.bankofnoir.database.schema.Schema2;
+import nz.co.noirland.bankofnoir.database.schema.Schema3;
 import nz.co.noirland.zephcore.Debug;
 import nz.co.noirland.zephcore.database.MySQLDatabase;
 
@@ -32,6 +33,7 @@ public class BankDatabase extends MySQLDatabase {
         inst = this;
         schemas.put(1, new Schema1());
         schemas.put(2, new Schema2());
+        schemas.put(3, new Schema3());
     }
 
     @Override
