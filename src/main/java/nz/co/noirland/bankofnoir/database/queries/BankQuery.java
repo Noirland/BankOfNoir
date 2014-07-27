@@ -2,9 +2,9 @@ package nz.co.noirland.bankofnoir.database.queries;
 
 import nz.co.noirland.bankofnoir.database.BankDatabase;
 import nz.co.noirland.zephcore.database.MySQLDatabase;
-import nz.co.noirland.zephcore.database.queries.Query;
+import nz.co.noirland.zephcore.database.queries.MySQLQuery;
 
-public class BankQuery extends Query {
+public class BankQuery extends MySQLQuery {
 
     protected MySQLDatabase getDB() {
         return BankDatabase.inst();
