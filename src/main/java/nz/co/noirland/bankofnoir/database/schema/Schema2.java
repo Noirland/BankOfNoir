@@ -5,7 +5,7 @@ import nz.co.noirland.bankofnoir.database.queries.BankQuery;
 import nz.co.noirland.bankofnoir.database.queries.GetAllBalancesQuery;
 import nz.co.noirland.zephcore.UUIDFetcher;
 import nz.co.noirland.zephcore.database.Schema;
-import nz.co.noirland.zephcore.database.queries.Query;
+import nz.co.noirland.zephcore.database.queries.MySQLQuery;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class Schema2 implements Schema {
 
         new BankQuery("ALTER TABLE `{PREFIX}_players` MODIFY COLUMN `player` VARCHAR(36)").execute();
 
-        Query updateQuery = new BankQuery(2, "UPDATE {PREFIX}_players SET player=? WHERE player=?");
+        MySQLQuery updateQuery = new BankQuery(2, "UPDATE {PREFIX}_players SET player=? WHERE player=?");
 
         for(Map.Entry<String, UUID> entry : uuids.entrySet()) {
             updateQuery.setValue(1, entry.getValue().toString());
