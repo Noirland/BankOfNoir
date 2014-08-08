@@ -2,7 +2,6 @@ package nz.co.noirland.bankofnoir.commands;
 
 import nz.co.noirland.bankofnoir.*;
 import nz.co.noirland.bankofnoir.config.PluginConfig;
-import nz.co.noirland.bankofnoir.database.SQLDatabase;
 import nz.co.noirland.zephcore.Util;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -66,7 +65,6 @@ public class BankAdminCommand implements CommandExecutor {
 
         PluginConfig.inst().reload();
         eco.setDenominations(PluginConfig.inst().getDenoms());
-        SQLDatabase.inst().openConnection();
         eco.reloadBalances();
         BankOfNoir.sendMessage(sender, Strings.BANKADMIN_RELOADED);
     }

@@ -1,7 +1,7 @@
 package nz.co.noirland.bankofnoir;
 
 import nz.co.noirland.bankofnoir.config.PluginConfig;
-import nz.co.noirland.bankofnoir.database.SQLDatabase;
+import nz.co.noirland.bankofnoir.database.BankDatabase;
 import org.bukkit.Material;
 
 import java.util.*;
@@ -40,7 +40,7 @@ public class EcoManager {
     /**
      * Instance of database handler.
      */
-    private final SQLDatabase db = SQLDatabase.inst();
+    private final BankDatabase db = BankDatabase.inst();
 
     /**
      * Plugin instance.
