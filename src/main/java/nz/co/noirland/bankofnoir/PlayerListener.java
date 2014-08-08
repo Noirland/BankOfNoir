@@ -4,7 +4,6 @@ import nz.co.noirland.zephcore.UpdateInventoryTask;
 import nz.co.noirland.zephcore.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -17,23 +16,29 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
+/**
+ * Listener class for BankOfNoir.
+ */
 public class PlayerListener implements Listener {
 
-    private final EcoManager eco = BankOfNoir.getEco();
+    private final EcoManager eco = EcoManager.inst();
+    private final BankManager bankManager = eco.getBankManager();
 
-
+    /**
+     * Called when a player tries to open a chest.
+     * It checks whether the player has permission to access the bank chest.
+     * If they have permission, it instead opens the Bank Inventory of the owner.
+     * if they don't, it denies them permission to access.
+     */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onOpenChest(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -55,55 +60,16 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        player.openInventory(eco.getBank(nz.co.noirland.zephcore.Util.uuid(owner)).getBank());
+        player.openInventory(bankManager.getBank(Util.uuid(owner)).getBank());
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onCloseChest(InventoryCloseEvent event) {
-        Inventory inv = event.getInventory();
-        Player player = (Player) event.getPlayer();
-
-        BankInventory<UUID> bank = eco.getOpenBank(inv);
-        if(bank == null) {
-            return;
-        }
-        UUID owner = bank.getOwner();
-        eco.removeOpenBank(bank);
-
-        double balance = eco.getBalance(owner);
-        double newBalance = eco.itemsToBalance(inv.getContents()) + bank.getRemainder();
-
-        for(ItemStack item : inv.getContents()) {
-            if(item == null) continue;
-            if(eco.isDenomination(item.getType())) continue;
-
-            PlayerInventory pInv = player.getInventory();
-            if(pInv.firstEmpty() != -1) {
-                pInv.addItem(item);
-                new UpdateInventoryTask(player);
-            }else{
-                player.getWorld().dropItem(player.getLocation(), item);
-            }
-        }
-
-        if(newBalance != balance) {
-            eco.setBalance(owner, newBalance);
-            String action;
-
-            if(newBalance > balance) {
-                action = Strings.ECO_DEPOSITED;
-            }else {
-                action = Strings.ECO_WITHDREW;
-            }
-            BankOfNoir.sendMessage(player, String.format(action, eco.format(Math.abs(newBalance - balance))));
-
-            OfflinePlayer pOwner = Util.player(owner);
-            if(!pOwner.equals(player) && pOwner.hasPlayedBefore() && pOwner.isOnline()) {
-                BankOfNoir.sendMessage(pOwner.getPlayer(), String.format(action, eco.format(Math.abs(newBalance - balance))));
-            }
-        }
-    }
-
+    /**
+     * Called when a player tries to place a sign. This makes sure they aren't trying to claim a
+     * claimed chest. If they aren't, it sets them as the owner of the chest using the sign.
+     * It also removes all items that are not currency from the chest, returning it to the player and
+     * dropping them to the ground. The rest that are currency are converted to a balance and added to
+     * the player.
+     */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onSignPlace(SignChangeEvent event) {
         Block bSign = event.getBlock();
@@ -161,6 +127,9 @@ public class PlayerListener implements Listener {
 
     }
 
+    /**
+     * Prevents bank chests from being exploded.
+     */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockExplode(EntityExplodeEvent event) {
         List<Block> exploded = event.blockList();
@@ -173,6 +142,9 @@ public class PlayerListener implements Listener {
         }
     }
 
+    /**
+     * Prevents a bank chest from being burned.
+     */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockBurn(BlockBurnEvent event) {
         Block block = event.getBlock();
@@ -181,6 +153,9 @@ public class PlayerListener implements Listener {
         }
     }
 
+    /**
+     * Prevents players from destroying bank chests that aren't their own.
+     */
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         Block block = event.getBlock();

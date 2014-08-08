@@ -1,50 +1,109 @@
 package nz.co.noirland.bankofnoir;
 
-import com.google.common.collect.Ordering;
 import nz.co.noirland.bankofnoir.config.PluginConfig;
-import nz.co.noirland.bankofnoir.database.SQLDatabase;
-import nz.co.noirland.zephcore.Util;
-import org.bukkit.ChatColor;
+import nz.co.noirland.bankofnoir.database.BankDatabase;
 import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
+/**
+ * Class that manages the balances of players for BankOfNoir.
+ * This also stores item denominations used to represent currency
+ */
 public class EcoManager {
 
+    /**
+     * The size that bank chests should be.
+     */
     public static final int BANK_SIZE = 6 * 9;
 
+    /**
+     * A map of all player balances.
+     */
     private final HashMap<UUID, Double> balances = new HashMap<UUID, Double>();
-    private final ArrayList<MoneyDenomination> denominations = new ArrayList<MoneyDenomination>();
-    private final PluginConfig config = PluginConfig.inst();
-    private final String format = "%." + config.getDecimals() + "f %s";
-    private final SQLDatabase db = SQLDatabase.inst();
-    private final Map<UUID, BankInventory<UUID>> openBanks = new HashMap<UUID, BankInventory<UUID>>();
 
-    EcoManager(Collection<MoneyDenomination> denoms) {
-        denominations.addAll(denoms);
-        reloadBalances();
+    /**
+     * All denominations recognised by the plugin.
+     */
+    private final ArrayList<MoneyDenomination> denominations = new ArrayList<MoneyDenomination>();
+
+    /**
+     * the plugin's config instance.
+     */
+    private final PluginConfig config = PluginConfig.inst();
+
+    /**
+     * decimal format used to display balances.
+     */
+    private final String format = "%." + config.getDecimals() + "f %s";
+
+    /**
+     * Instance of database handler.
+     */
+    private final BankDatabase db = BankDatabase.inst();
+
+    /**
+     * Plugin instance.
+     */
+    private static EcoManager inst;
+
+    /**
+     * The player bank manager for the plugin.
+     */
+    private BankManager bankManager;
+
+    /**
+     * Get the manager's singleton instance. If one does not exist, create one and configure it.
+     * @return The EcoManager instance
+     */
+    public static EcoManager inst() {
+        if(inst == null) {
+            inst = new EcoManager();
+            inst.bankManager = new BankManager();
+            inst.denominations.addAll(PluginConfig.inst().getDenoms());
+            inst.reloadBalances();
+        }
+        return inst;
     }
 
+    private EcoManager() {}
+
+    /**
+     * Get the BankManager associated with this economy.
+     * @return The BankManager
+     */
+    public BankManager getBankManager() {
+        return bankManager;
+    }
+
+    /**
+     * Sets the recognised denominations, throwing out all the others.
+     * @param denoms denominations to replace current ones
+     */
     public void setDenominations(Collection<MoneyDenomination> denoms) {
         denominations.clear();
         denominations.addAll(denoms);
     }
 
+    /**
+     * Gets all the balances from the database to ensure they are up to date.
+     * Also ensures that all open banks are up to date as well.
+     */
     public void reloadBalances() {
         Map<UUID, Double> db_balances = db.getAllBalances();
         for(UUID player : db_balances.keySet()) {
-            if(!openBanks.containsKey(player)) continue;
             Double diff = db_balances.get(player) - getBalance(player);
-            BankInventory<UUID> bank = openBanks.get(player);
-            Double bankBalance = itemsToBalance(bank.getBank().getContents()) + bank.getRemainder();
-            bank.setRemainder(setBankContents(bank.getBank(), bankBalance + diff));
+            bankManager.updateBank(player, diff);
         }
         balances.clear();
         balances.putAll(db_balances);
     }
 
+    /**
+     * Gets the balance for the specified player
+     * @param player UUID of player
+     * @return Their balance, or default of 0 if they don't have one.
+     */
     public double getBalance(UUID player) {
         if(!(balances.containsKey(player))) {
             return 0;
@@ -52,140 +111,63 @@ public class EcoManager {
         return balances.get(player);
     }
 
+    /**
+     * Set the balance of a player both in memory and in the database.
+     * Also updates an open bank inventory if one exists.
+     * @param player UUID of player
+     * @param balance Their new balance
+     */
     public void setBalance(UUID player, double balance) {
-        /*
-        - Get balance of currently open inventory + remainder
-        - Add/subtract adjust
-        - Recreate items and remainder
-        - Change open inventory and remainder
-         */
         Double diff = balance - getBalance(player);
         balances.put(player, balance);
         db.setBalance(player, balance);
-        if(!openBanks.containsKey(player)) return;
-        BankInventory<UUID> bank = openBanks.get(player);
-        Double bankBalance = itemsToBalance(bank.getBank().getContents()) + bank.getRemainder();
-        bank.setRemainder(setBankContents(bank.getBank(), bankBalance + diff));
-
+        bankManager.updateBank(player, diff);
     }
 
+    /**
+     * Checks if a player has a balance in memory
+     * @param player UUID of player
+     * @return Whether or not they have a balance
+     */
     public boolean hasBalance(UUID player) {
         return balances.containsKey(player);
     }
 
+    /**
+     * Convert a given balance to the plugin's balance format.
+     * @param amount balance to convert
+     * @return balance string
+     */
     public String format(double amount) {
         return String.format(format, amount, amount==1.0 ? config.getSingular() : config.getPlural());
     }
 
+    /**
+     * Get all denominations recognised
+     * @return List of all denominations
+     */
     public ArrayList<MoneyDenomination> getDenominations() {
         return denominations;
     }
 
+    /**
+     * Checks whether a material is recognised as a denomination
+     * @param material material to check
+     * @return Whether the material is a denomination
+     */
     public boolean isDenomination(Material material) {
         return !(getDenomination(material) == null);
     }
 
+    /**
+     * Get the MoneyDenomination object for a given material.
+     * @param material material to get denomination for
+     * @return MoneyDenomination, or null if none exists
+     */
     public MoneyDenomination getDenomination(Material material) {
         for(MoneyDenomination denom : getDenominations()) {
             if(denom.getMaterial() == material) return denom;
         }
         return null;
-    }
-
-    public ItemStack[] balanceToItems(double balance) {
-        ArrayList<ItemStack> items = new ArrayList<ItemStack>();
-
-        SortedSet<MoneyDenomination> denoms = new TreeSet<MoneyDenomination>(Ordering.natural().reverse());
-        denoms.addAll(getDenominations());
-
-        for(MoneyDenomination denom : denoms) {
-            int amount = (int) (balance / denom.getValue());
-            balance = balance % denom.getValue();
-            for(int i = 0; i < (amount / 64); i++) {
-                items.add(new ItemStack(denom.getMaterial(), 64));
-            }
-            if(amount > 0 && amount % 64 != 0) {
-                items.add(new ItemStack(denom.getMaterial(), amount % 64));
-            }
-        }
-        return items.toArray(new ItemStack[items.size()]);
-    }
-
-    public double itemsToBalance(ItemStack[] items) {
-        double balance = 0;
-        Map<MoneyDenomination, Integer> amounts = new HashMap<MoneyDenomination, Integer>();
-
-        for(ItemStack item : items) {
-            if(item == null) continue;
-            if(!isDenomination(item.getType())) continue;
-            MoneyDenomination denom = getDenomination(item.getType());
-            amounts.put(denom, (amounts.containsKey(denom) ? amounts.get(denom) : 0) + item.getAmount());
-        }
-
-        for(Map.Entry<MoneyDenomination, Integer> entry : amounts.entrySet()) {
-            balance += entry.getKey().getValue() * entry.getValue();
-        }
-        return balance;
-    }
-
-    public BankInventory<UUID> getBank(UUID player) {
-        BankInventory<UUID> bank;
-        if(openBanks.containsKey(player)) {
-            bank = openBanks.get(player);
-        } else {
-            bank = createBank(player);
-            openBanks.put(player, bank);
-        }
-        return bank;
-    }
-
-    public BankInventory<UUID> getOpenBank(Inventory inv) {
-        BankInventory<UUID> bank = null;
-        for(Map.Entry<UUID, BankInventory<UUID>> entry : openBanks.entrySet()) {
-            if(entry.getValue().getBank().equals(inv)) {
-                bank = entry.getValue();
-                break;
-            }
-        }
-        return bank;
-    }
-
-    public void removeOpenBank(BankInventory<UUID> bank) {
-        if(bank.getBank().getViewers().size() > 1) return;
-        openBanks.remove(bank.getOwner());
-    }
-
-    public BankInventory<UUID> createBank(UUID player) {
-        Inventory bank = BankOfNoir.inst().getServer().createInventory(null, BANK_SIZE, "Bank: " + ChatColor.GOLD + Util.player(player).getName());
-
-        Double remainder = setBankContents(bank, getBalance(player));
-
-        return new BankInventory<UUID>(player, bank, remainder);
-    }
-
-    public Double getRemainder(Double balance) {
-        double newBalance = itemsToBalance(balanceToItems(balance));
-        return balance - newBalance;
-    }
-
-    /**
-     * @return Remainder + overflow after inventory is loaded
-     */
-    public Double setBankContents(Inventory bank, Double balance) {
-        bank.clear();
-
-        HashMap<Integer, ItemStack> leftover = bank.addItem(balanceToItems(balance));
-
-        double remainder = 0.0;
-        if(!leftover.isEmpty()) {
-            for(ItemStack item : leftover.values()) {
-                if(item == null) continue;
-                if(!isDenomination(item.getType())) continue;
-                MoneyDenomination denom = getDenomination(item.getType());
-                remainder += item.getAmount() * denom.getValue();
-            }
-        }
-        remainder += getRemainder(balance);
-        return remainder;
     }
 }

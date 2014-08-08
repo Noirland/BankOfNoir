@@ -28,7 +28,7 @@ public class PluginConfig extends Config {
     }
 
     // MySQL
-    public String getPrefix()    { return config.getString("mysql.prefix", "bank_"); }
+    public String getPrefix()    { return config.getString("mysql.prefix", "bank"); }
     public String getDatabase()  { return config.getString("mysql.database", "bankofnoir"); }
     public String getUsername()  { return config.getString("mysql.username"); }
     public String getPassword()  { return config.getString("mysql.password"); }

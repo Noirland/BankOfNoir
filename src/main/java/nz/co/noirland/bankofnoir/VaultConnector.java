@@ -11,10 +11,14 @@ import org.bukkit.plugin.ServicesManager;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of a Vault economy for BankOfNoir.
+ * @see net.milkbowl.vault.economy.Economy
+ */
 public class VaultConnector implements Economy {
 
     private final String name = "BankOfNoir";
-    private final EcoManager eco = BankOfNoir.getEco();
+    private final EcoManager eco = EcoManager.inst();
     private final PluginConfig config = PluginConfig.inst();
 
     public VaultConnector() {

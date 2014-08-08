@@ -1,35 +1,28 @@
 package nz.co.noirland.bankofnoir.database.schema;
 
 import nz.co.noirland.bankofnoir.BankOfNoir;
-import nz.co.noirland.bankofnoir.database.DatabaseTables;
-import nz.co.noirland.bankofnoir.database.SQLDatabase;
+import nz.co.noirland.bankofnoir.database.queries.BankQuery;
+import nz.co.noirland.zephcore.database.Schema;
 
 import java.sql.SQLException;
 
-public class Schema1 extends Schema {
+public class Schema1 implements Schema {
 
-    private final SQLDatabase db = SQLDatabase.inst();
-
-    public void updateDatabase() {
-        createPlayersTable();
-        createSchemaTable();
-    }
-
-    private void createSchemaTable() {
-        String schemaTable = DatabaseTables.SCHEMA.toString();
-        try{
-            db.prepareStatement("CREATE TABLE `" + schemaTable + "` (`version` TINYINT UNSIGNED);").execute();
-            db.prepareStatement("INSERT INTO `" + schemaTable + "` VALUES(1);").execute();
-        }catch(SQLException e) {
-            BankOfNoir.debug().disable("Could not create schema table!", e);
-        }
-    }
-
-    private void createPlayersTable() {
+    public void run() {
         try {
-            db.prepareStatement("CREATE TABLE `" + DatabaseTables.PLAYERS.toString() + "` (`player` VARCHAR(16), `balance` INT UNSIGNED, PRIMARY KEY(`player`))").execute();
-        }catch(SQLException e) {
-            BankOfNoir.debug().disable("Couldn't create players table!", e);
+            createPlayersTable();
+            createSchemaTable();
+        } catch (SQLException e) {
+            BankOfNoir.debug().disable("Could not update database to schema 1!", e);
         }
+    }
+
+    private void createSchemaTable() throws SQLException {
+        new BankQuery("CREATE TABLE `{PREIFIX}_schema` (`version` TINYINT UNSIGNED);").execute();
+        new BankQuery("INSERT INTO `{PREIFIX}_schema` VALUES(1);").execute();
+    }
+
+    private void createPlayersTable() throws SQLException {
+        new BankQuery("CREATE TABLE `{PREFIX}_players` (`player` VARCHAR(16), `balance` INT UNSIGNED, PRIMARY KEY(`player`))").execute();
     }
 }

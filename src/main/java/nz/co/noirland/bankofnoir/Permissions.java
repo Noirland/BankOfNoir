@@ -1,5 +1,8 @@
 package nz.co.noirland.bankofnoir;
 
+/**
+ * Permission nodes for BankOfNoir. The primarily are used in commands.
+ */
 public class Permissions {
 
     public static final String BANK = "bankofnoir.bank";
