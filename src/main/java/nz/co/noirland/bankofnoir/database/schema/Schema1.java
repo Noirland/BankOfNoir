@@ -18,8 +18,8 @@ public class Schema1 implements Schema {
     }
 
     private void createSchemaTable() throws SQLException {
-        new BankQuery("CREATE TABLE `{PREIFIX}_schema` (`version` TINYINT UNSIGNED);").execute();
-        new BankQuery("INSERT INTO `{PREIFIX}_schema` VALUES(1);").execute();
+        new BankQuery("CREATE TABLE `{PREFIX}_schema` (`version` TINYINT UNSIGNED);").execute();
+        new BankQuery("INSERT INTO `{PREFIX}_schema` VALUES(1);").execute();
     }
 
     private void createPlayersTable() throws SQLException {
