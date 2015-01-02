@@ -5,7 +5,7 @@ import nz.co.noirland.bankofnoir.database.queries.BankQuery;
 import nz.co.noirland.bankofnoir.database.queries.GetAllBalancesQuery;
 import nz.co.noirland.zephcore.UUIDFetcher;
 import nz.co.noirland.zephcore.database.Schema;
-import nz.co.noirland.zephcore.database.queries.MySQLQuery;
+import nz.co.noirland.zephcore.database.mysql.MySQLQuery;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

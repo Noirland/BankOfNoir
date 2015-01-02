@@ -2,7 +2,6 @@ package nz.co.noirland.bankofnoir;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
-import nz.co.noirland.bankofnoir.config.PluginConfig;
 import nz.co.noirland.zephcore.Util;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.ServicePriority;
@@ -19,7 +18,7 @@ public class VaultConnector implements Economy {
 
     private final String name = "BankOfNoir";
     private final EcoManager eco = EcoManager.inst();
-    private final PluginConfig config = PluginConfig.inst();
+    private final BankConfig config = BankConfig.inst();
 
     public VaultConnector() {
         final BankOfNoir plugin = BankOfNoir.inst();

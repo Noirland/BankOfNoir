@@ -1,6 +1,5 @@
 package nz.co.noirland.bankofnoir;
 
-import nz.co.noirland.bankofnoir.config.PluginConfig;
 import nz.co.noirland.bankofnoir.database.BankDatabase;
 import org.bukkit.Material;
 
@@ -30,7 +29,7 @@ public class EcoManager {
     /**
      * the plugin's config instance.
      */
-    private final PluginConfig config = PluginConfig.inst();
+    private final BankConfig config = BankConfig.inst();
 
     /**
      * decimal format used to display balances.
@@ -60,7 +59,7 @@ public class EcoManager {
         if(inst == null) {
             inst = new EcoManager();
             inst.bankManager = new BankManager();
-            inst.denominations.addAll(PluginConfig.inst().getDenoms());
+            inst.denominations.addAll(BankConfig.inst().getDenoms());
             inst.reloadBalances();
         }
         return inst;

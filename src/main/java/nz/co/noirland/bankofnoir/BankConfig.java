@@ -1,30 +1,42 @@
-package nz.co.noirland.bankofnoir.config;
+package nz.co.noirland.bankofnoir;
 
-import nz.co.noirland.bankofnoir.MoneyDenomination;
+import nz.co.noirland.zephcore.Config;
+import nz.co.noirland.zephcore.Debug;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PluginConfig extends Config {
+public class BankConfig extends Config {
 
-    private static PluginConfig inst;
+    private static BankConfig inst;
 
-    private PluginConfig() {
+    @Override
+    protected Plugin getPlugin() {
+        return BankOfNoir.inst();
+    }
+
+    @Override
+    protected Debug getDebug() {
+        return BankOfNoir.debug();
+    }
+
+    private BankConfig() {
         super("config.yml");
     }
 
-    public static PluginConfig inst() {
+    public static BankConfig inst() {
         if(inst == null) {
-            inst = new PluginConfig();
+            inst = new BankConfig();
         }
 
         return inst;
     }
 
     public void reload() {
-        loadFile();
+        load();
     }
 
     // MySQL
@@ -34,8 +46,6 @@ public class PluginConfig extends Config {
     public String getPassword()  { return config.getString("mysql.password"); }
     public int    getPort()      { return config.getInt   ("mysql.port", 3306); }
     public String getHost()      { return config.getString("mysql.host", "localhost"); }
-
-    public boolean getDebug()    { return config.getBoolean("debug", false);}
 
     public String  getSingular() { return config.getString("currency.singular", "Gold"); }
     public String  getPlural()   { return config.getString("currency.plural", "Gold"); }
