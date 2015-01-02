@@ -1,7 +1,7 @@
 package nz.co.noirland.bankofnoir.commands;
 
 import nz.co.noirland.bankofnoir.*;
-import nz.co.noirland.bankofnoir.config.PluginConfig;
+import nz.co.noirland.bankofnoir.BankConfig;
 import nz.co.noirland.zephcore.Util;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -63,8 +63,8 @@ public class BankAdminCommand implements CommandExecutor {
             return;
         }
 
-        PluginConfig.inst().reload();
-        eco.setDenominations(PluginConfig.inst().getDenoms());
+        BankConfig.inst().reload();
+        eco.setDenominations(BankConfig.inst().getDenoms());
         eco.reloadBalances();
         BankOfNoir.sendMessage(sender, Strings.BANKADMIN_RELOADED);
     }

@@ -1,14 +1,14 @@
 package nz.co.noirland.bankofnoir.database;
 
 import nz.co.noirland.bankofnoir.BankOfNoir;
-import nz.co.noirland.bankofnoir.config.PluginConfig;
+import nz.co.noirland.bankofnoir.BankConfig;
 import nz.co.noirland.bankofnoir.database.queries.GetAllBalancesQuery;
 import nz.co.noirland.bankofnoir.database.queries.UpdateBalanceQuery;
 import nz.co.noirland.bankofnoir.database.schema.Schema1;
 import nz.co.noirland.bankofnoir.database.schema.Schema2;
 import nz.co.noirland.bankofnoir.database.schema.Schema3;
 import nz.co.noirland.zephcore.Debug;
-import nz.co.noirland.zephcore.database.MySQLDatabase;
+import nz.co.noirland.zephcore.database.mysql.MySQLDatabase;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class BankDatabase extends MySQLDatabase {
 
     private static BankDatabase inst;
 
-    private static PluginConfig config = PluginConfig.inst();
+    private static BankConfig config = BankConfig.inst();
 
     public static BankDatabase inst() {
         if(inst == null) {
