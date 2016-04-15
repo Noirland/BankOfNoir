@@ -1,8 +1,11 @@
 package nz.co.noirland.bankofnoir;
 
 import nz.co.noirland.bankofnoir.database.BankDatabase;
+import nz.co.noirland.zephcore.Util;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -118,6 +121,7 @@ public class EcoManager {
      */
     public void setBalance(UUID player, double balance) {
         Double diff = balance - getBalance(player);
+        balance = round(balance);
         balances.put(player, balance);
         db.setBalance(player, balance);
         bankManager.updateBank(player, diff);
@@ -139,6 +143,16 @@ public class EcoManager {
      */
     public String format(double amount) {
         return String.format(format, amount, amount==1.0 ? config.getSingular() : config.getPlural());
+    }
+
+    /**
+     * Rounds the given amount to the number of places specified in the config.
+     * @param amount Amount to round
+     * @return Rounded amount
+     */
+    public double round(double amount) {
+        String places = StringUtils.repeat("#", BankConfig.inst().getDecimals());
+        return Util.round(amount, new DecimalFormat("#." + places));
     }
 
     /**

@@ -59,6 +59,7 @@ public class PayCommand implements CommandExecutor {
             BankOfNoir.sendMessage(from, Strings.AMOUNT_NAN);
             return true;
         }
+        amount = EcoManager.inst().round(amount);
         if(amount < 0) {
             BankOfNoir.sendMessage(from, String.format(Strings.PAY_NEGATIVE_AMOUNT));
             return true;
@@ -67,7 +68,6 @@ public class PayCommand implements CommandExecutor {
             BankOfNoir.sendMessage(from, String.format(Strings.PAY_ZERO_AMOUNT));
             return true;
         }
-        amount = Util.round(amount, new DecimalFormat("#.##"));
 
         Double fromBal = eco.getBalance(from.getUniqueId());
         Double toBal   = eco.getBalance(to.getUniqueId());
